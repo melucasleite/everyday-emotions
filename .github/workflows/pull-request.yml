@@ -1,0 +1,25 @@
+
+name: Pull Request CI/CD
+
+on: pull_request
+jobs:
+  primary:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.x
+    - name: install dependencies
+      run: npm ci
+    - name: lint
+      run: npm run lint
+    - name: test
+      run: npm run test
