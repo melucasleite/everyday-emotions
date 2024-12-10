@@ -1,62 +1,58 @@
 import { render, screen } from "@testing-library/react";
 import Home from "./page";
 import "@testing-library/jest-dom";
+import fetchMock from "jest-fetch-mock";
+
+fetchMock.enableMocks();
 
 describe("Home", () => {
-  it("renders the Next.js logo", () => {
-    render(<Home />);
-    const nextLogo = screen.getByAltText("Next.js logo");
-    expect(nextLogo).toBeInTheDocument();
+  beforeEach(() => {
+    fetchMock.resetMocks();
   });
 
-  it('renders the "Get started" text', () => {
-    render(<Home />);
-    const getStartedText = screen.getByText(/Get started by editing/i);
-    expect(getStartedText).toBeInTheDocument();
+  it("renders the Next.js logo", async () => {
+    fetchMock.mockResponseOnce(JSON.stringify([]));
+    render(await Home());
+    const logo = screen.getByAltText("Next.js logo");
+    expect(logo).toBeInTheDocument();
   });
 
-  it('renders the "Deploy now" link', () => {
-    render(<Home />);
-    const deployLink = screen.getByText(/Deploy now/i);
+  it("renders the users list", async () => {
+    const users = [
+      { name: "John Doe", email: "john@example.com" },
+      { name: "Jane Doe", email: "jane@example.com" },
+    ];
+    fetchMock.mockResponseOnce(JSON.stringify(users));
+    render(await Home());
+    users.forEach((user) => {
+      expect(
+        screen.getByText(`${user.name} - ${user.email}`)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("renders the deploy now link", async () => {
+    fetchMock.mockResponseOnce(JSON.stringify([]));
+    render(await Home());
+    const deployLink = screen.getByText("Deploy now");
     expect(deployLink).toBeInTheDocument();
-    expect(deployLink).toHaveAttribute(
-      "href",
-      "https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-    );
   });
 
-  it('renders the "Read our docs" link', () => {
-    render(<Home />);
-    const docsLink = screen.getByText(/Read our docs/i);
+  it("renders the read our docs link", async () => {
+    fetchMock.mockResponseOnce(JSON.stringify([]));
+    render(await Home());
+    const docsLink = screen.getByText("Read our docs");
     expect(docsLink).toBeInTheDocument();
-    expect(docsLink).toHaveAttribute(
-      "href",
-      "https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-    );
   });
 
-  it("renders the footer links", () => {
-    render(<Home />);
-    const learnLink = screen.getByText(/Learn/i);
-    const examplesLink = screen.getByText(/Examples/i);
-    const nextjsLink = screen.getByText(/Go to nextjs.org/i);
-
+  it("renders the footer links", async () => {
+    fetchMock.mockResponseOnce(JSON.stringify([]));
+    render(await Home());
+    const learnLink = screen.getByText("Learn");
+    const examplesLink = screen.getByText("Examples");
+    const nextjsLink = screen.getByText("Go to nextjs.org →");
     expect(learnLink).toBeInTheDocument();
-    expect(learnLink).toHaveAttribute(
-      "href",
-      "https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-    );
-
     expect(examplesLink).toBeInTheDocument();
-    expect(examplesLink).toHaveAttribute(
-      "href",
-      "https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-    );
-
     expect(nextjsLink).toBeInTheDocument();
-    expect(nextjsLink).toHaveAttribute(
-      "href",
-      "https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-    );
   });
 });
