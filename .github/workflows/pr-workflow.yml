@@ -6,32 +6,55 @@ on:
       - main
 
 jobs:
-  build:
+  checkout:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
+  setup-node:
+    runs-on: ubuntu-latest
+    needs: checkout
+    steps:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '22'
 
+  install-dependencies:
+    runs-on: ubuntu-latest
+    needs: setup-node
+    steps:
     - name: Install dependencies
       run: npm install
 
+  lint:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
     - name: Run lint
       run: npm run lint
 
+  test:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
     - name: Run tests
       run: npm test
 
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+    steps:
     - name: Build project
       env:
-        CLERK_PUBLISHABLE_KEY : ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+        CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
       run: npm run build
 
+  upload-coverage:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
