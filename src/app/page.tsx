@@ -1,13 +1,10 @@
-import { User } from "@prisma/client";
+import { getOrCreateCurrentUser } from "../lib/getOrCreateCurrentUser";
 import Image from "next/image";
-import { API_BASE_URL } from "../lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const res = await fetch(`${API_BASE_URL}/api/users`);
-  const users: User[] = await res.json();
-
+  const user = await getOrCreateCurrentUser();
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -30,12 +27,12 @@ export default async function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
 
-        <h3>Users</h3>
-        {users.map((user, index) => (
-          <li key={index}>
+        <h3>Current User</h3>
+        <ul>
+          <li>
             {user.name} - {user.email}
           </li>
-        ))}
+        </ul>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a

@@ -1,13 +1,23 @@
 import { render, screen } from "@testing-library/react";
-import Home from "./page";
-import "@testing-library/jest-dom";
 import fetchMock from "jest-fetch-mock";
 
-fetchMock.enableMocks();
+import { getOrCreateCurrentUser } from "../lib/getOrCreateCurrentUser";
+jest.mock("../lib/getOrCreateCurrentUser");
+import Home from "./page";
+import "@testing-library/jest-dom";
 
 describe("Home", () => {
   beforeEach(() => {
     fetchMock.resetMocks();
+    const mockedFunction = getOrCreateCurrentUser as jest.MockedFunction<
+      typeof getOrCreateCurrentUser
+    >;
+    mockedFunction.mockResolvedValue({
+      id: 0,
+      ssoId: "",
+      name: "John Doe",
+      email: "john@example.com",
+    });
   });
 
   it("renders the Next.js logo", async () => {
@@ -18,17 +28,11 @@ describe("Home", () => {
   });
 
   it("renders the users list", async () => {
-    const users = [
-      { name: "John Doe", email: "john@example.com" },
-      { name: "Jane Doe", email: "jane@example.com" },
-    ];
-    fetchMock.mockResponseOnce(JSON.stringify(users));
+    const user = { name: "John Doe", email: "john@example.com" };
     render(await Home());
-    users.forEach((user) => {
-      expect(
-        screen.getByText(`${user.name} - ${user.email}`)
-      ).toBeInTheDocument();
-    });
+    expect(
+      screen.getByText(`${user.name} - ${user.email}`)
+    ).toBeInTheDocument();
   });
 
   it("renders the deploy now link", async () => {
