@@ -29,8 +29,10 @@ jobs:
 
     - name: Build project
       env:
-        CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-      run: npm run build
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+      run: |
+        echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}"
+        npm run build
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
