@@ -19,3 +19,34 @@ model User {
   name  String
   email String  @unique
 }
+
+model Survey {
+  id        Int        @id @default(autoincrement())
+  name      String
+  questions Question[]
+}
+
+model Question {
+  id        Int        @id @default(autoincrement())
+  text      String
+  type      QuestionType
+  options   Option[]
+  min       Int?
+  max       Int?
+  surveyId  Int
+  Survey    Survey     @relation(fields: [surveyId], references: [id])
+}
+
+enum QuestionType {
+  radio
+  text
+  checkbox
+  grade
+}
+
+model Option {
+  id         Int     @id @default(autoincrement())
+  text       String
+  questionId Int
+  Question   Question @relation(fields: [questionId], references: [id])
+}
