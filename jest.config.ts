@@ -1,11 +1,17 @@
 import type { Config } from "jest";
 
+const { pathsToModuleNameMapper } = require("ts-jest");
+const { compilerOptions } = require("./tsconfig.jest");
+
 const config: Config = {
   clearMocks: true,
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   transformIgnorePatterns: [],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: "<rootDir>/",
+  }),
   moduleFileExtensions: [
     "js",
     "mjs",
@@ -31,6 +37,9 @@ const config: Config = {
           { configFile: "./babel.config.jest.js" },
         ],
       },
+      moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+        prefix: "<rootDir>/",
+      }),
       transformIgnorePatterns: [],
     },
     {
@@ -47,6 +56,9 @@ const config: Config = {
           { configFile: "./babel.config.jest.js" },
         ],
       },
+      moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+        prefix: "<rootDir>/",
+      }),
       transformIgnorePatterns: [],
     },
   ],

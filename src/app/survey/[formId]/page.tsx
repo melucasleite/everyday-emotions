@@ -1,9 +1,9 @@
 import Form from "@/components/Form";
-import { surveys } from "@/lib/survey";
-import { callback } from "./callback";
+import { getFirstSurvey } from "@/lib/survey";
+import { callback } from "@/lib/callback";
 
 export default async function Page() {
-  const survey = surveys[0];
+  const survey = await getFirstSurvey();
 
   return (
     <>
