@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import fetchMock from "jest-fetch-mock";
 
-import { getOrCreateCurrentUser } from "../lib/getOrCreateCurrentUser";
-jest.mock("../lib/getOrCreateCurrentUser");
+import { getOrCreateCurrentUser } from "../lib/users";
+jest.mock("../lib/users");
 import Home from "./page";
 import "@testing-library/jest-dom";
 

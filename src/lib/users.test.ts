@@ -1,6 +1,6 @@
 import fetchMock from "jest-fetch-mock";
 import { currentUser } from "@clerk/nextjs/server";
-import { getOrCreateCurrentUser } from "./getOrCreateCurrentUser";
+import { getOrCreateCurrentUser } from "./users";
 import prisma from "./prisma";
 
 jest.mock("@clerk/nextjs/server");

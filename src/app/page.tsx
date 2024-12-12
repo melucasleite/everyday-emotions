@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getOrCreateCurrentUser } from "../lib/getOrCreateCurrentUser";
+import { getOrCreateCurrentUser } from "../lib/users";
 import Image from "next/image";
 
 export const dynamic = "force-dynamic";

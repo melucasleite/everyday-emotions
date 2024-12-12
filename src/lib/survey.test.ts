@@ -1,16 +1,16 @@
 import prisma from "@/lib/prisma";
-import { getFirstSurvey, submitSurveyResponse } from "./survey";
+import { getSurveyById, submitSurveyResponse } from "./survey";
 
 jest.mock("@/lib/prisma", () => ({
   survey: {
-    findFirst: jest.fn(),
+    findUnique: jest.fn(),
   },
   surveyResponse: {
     create: jest.fn(),
   },
 }));
 
-describe("getFirstSurvey", () => {
+describe("getSurveyById", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -28,31 +28,33 @@ describe("getFirstSurvey", () => {
       ],
     };
 
-    (prisma.survey.findFirst as jest.Mock).mockResolvedValue(mockSurvey);
+    (prisma.survey.findUnique as jest.Mock).mockResolvedValue(mockSurvey);
 
-    const survey = await getFirstSurvey();
+    const survey = await getSurveyById(1);
 
     expect(survey).toEqual(mockSurvey);
-    expect(prisma.survey.findFirst).toHaveBeenCalledWith({
+    expect(prisma.survey.findUnique).toHaveBeenCalledWith({
+      where: { id: 1 },
       include: { questions: { include: { options: true } } },
     });
   });
 
   test("should throw an error if no survey is found", async () => {
-    (prisma.survey.findFirst as jest.Mock).mockResolvedValue(null);
+    (prisma.survey.findUnique as jest.Mock).mockResolvedValue(null);
 
-    await expect(getFirstSurvey()).rejects.toThrow("No survey found");
-    expect(prisma.survey.findFirst).toHaveBeenCalledWith({
+    await expect(getSurveyById(1)).rejects.toThrow("No survey found");
+    expect(prisma.survey.findUnique).toHaveBeenCalledWith({
+      where: { id: 1 },
       include: { questions: { include: { options: true } } },
     });
   });
 
   test("should throw an error if prisma throws an unknown error", async () => {
-    (prisma.survey.findFirst as jest.Mock).mockRejectedValue(
+    (prisma.survey.findUnique as jest.Mock).mockRejectedValue(
       new Error("Unknown error")
     );
 
-    await expect(getFirstSurvey()).rejects.toThrow("Unknown error");
+    await expect(getSurveyById(1)).rejects.toThrow("Unknown error");
   });
 });
 
