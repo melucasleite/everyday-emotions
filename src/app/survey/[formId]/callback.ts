@@ -1,5 +1,10 @@
 "use server";
 
-export const callback = async (answers: any) => {
+interface Answer {
+  questionId: number;
+  value: string;
+}
+
+export const callback = async (answers: Answer[]) => {
   console.log(answers);
 };

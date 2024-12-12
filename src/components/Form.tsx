@@ -6,12 +6,17 @@ type FullSurvey = Prisma.SurveyGetPayload<{
   include: { questions: { include: { options: true } } };
 }>;
 
+interface Answer {
+  questionId: number;
+  value: string;
+}
+
 export default function Form({
   survey,
   callback,
 }: {
   survey: FullSurvey;
-  callback: (answers: any) => void;
+  callback: (answers: Answer[]) => void;
 }) {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
