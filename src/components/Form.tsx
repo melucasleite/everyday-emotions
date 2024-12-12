@@ -33,7 +33,7 @@ export default function Form({
           questionId: question.id,
           value: value ? value.toString() : "",
         };
-      } else if (question.type === "checkbox" && question.options) {
+      } else {
         const values = question.options
           .filter((option) => formData.get(`${name}-option-${option.id}`))
           .map((option) => option.id.toString());
@@ -42,10 +42,6 @@ export default function Form({
           value: values.join(","),
         };
       }
-      return {
-        questionId: question.id,
-        value: "",
-      };
     });
     callback(answers);
   };
@@ -95,15 +91,15 @@ export default function Form({
                     </label>
                   </div>
                 ))
-              ) : question.type === "grade" ? (
+              ) : (
                 <input
                   type="range"
                   id={`question-${question.id}`}
                   name={`question-${question.id}`}
-                  min={question.min ?? 0}
-                  max={question.max ?? 10}
+                  min={question.min || 0}
+                  max={question.max || 10}
                 />
-              ) : null}
+              )}
             </div>
           </div>
         ))}

@@ -53,6 +53,15 @@ const mockSurvey: FullSurvey = {
       max: null,
       surveyId: 1,
     },
+    {
+      id: 5,
+      text: "Rate our service without min max",
+      type: "grade",
+      min: null,
+      max: null,
+      options: [],
+      surveyId: 1,
+    },
   ],
 };
 
@@ -92,6 +101,7 @@ describe("Form", () => {
       { questionId: 2, value: "4" },
       { questionId: 3, value: "1" },
       { questionId: 4, value: "1" },
+      { questionId: 5, value: "5" },
     ]);
   });
 
@@ -105,6 +115,7 @@ describe("Form", () => {
       { questionId: 2, value: "3" },
       { questionId: 3, value: "" },
       { questionId: 4, value: "" },
+      { questionId: 5, value: "5" },
     ]);
   });
 });
