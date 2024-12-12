@@ -18,12 +18,18 @@ model User {
   ssoId  String? @unique
   name  String
   email String  @unique
+
+  Answer Answer[]
+
+  SurveyResponse SurveyResponse[]
 }
 
 model Survey {
   id        Int        @id @default(autoincrement())
   name      String
   questions Question[]
+
+  SurveyResponse SurveyResponse[]
 }
 
 model Question {
@@ -35,6 +41,8 @@ model Question {
   max       Int?
   surveyId  Int
   Survey    Survey     @relation(fields: [surveyId], references: [id])
+
+  Answer Answer[]
 }
 
 enum QuestionType {
@@ -49,4 +57,28 @@ model Option {
   text       String
   questionId Int
   Question   Question @relation(fields: [questionId], references: [id])
+}
+
+model Answer {
+  id               Int       @id @default(autoincrement())
+  response         String
+  questionId       Int
+  Question         Question  @relation(fields: [questionId], references: [id])
+  userId           Int
+  User             User      @relation(fields: [userId], references: [id])
+  surveyResponseId Int
+  SurveyResponse   SurveyResponse @relation(fields: [surveyResponseId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model SurveyResponse {
+  id        Int       @id @default(autoincrement())
+  surveyId  Int
+  Survey    Survey    @relation(fields: [surveyId], references: [id])
+  userId    Int
+  User      User      @relation(fields: [userId], references: [id])
+  answers   Answer[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }

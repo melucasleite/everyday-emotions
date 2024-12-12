@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getOrCreateCurrentUser } from "../lib/getOrCreateCurrentUser";
 import Image from "next/image";
 
@@ -31,6 +32,13 @@ export default async function Home() {
         <ul>
           <li>
             {user.name} - {user.email}
+          </li>
+        </ul>
+
+        <h3>Surveys</h3>
+        <ul>
+          <li>
+            <Link href="/survey/1">Go to surveys</Link>
           </li>
         </ul>
 

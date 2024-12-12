@@ -96,12 +96,12 @@ describe("Form", () => {
 
     fireEvent.submit(screen.getByRole("button", { name: /submit/i }));
 
-    expect(mockCallback).toHaveBeenCalledWith([
-      { questionId: 1, value: "John Doe" },
-      { questionId: 2, value: "4" },
-      { questionId: 3, value: "1" },
-      { questionId: 4, value: "1" },
-      { questionId: 5, value: "5" },
+    expect(mockCallback).toHaveBeenCalledWith(1, [
+      { questionId: 1, response: "John Doe" },
+      { questionId: 2, response: "4" },
+      { questionId: 3, response: "Red" },
+      { questionId: 4, response: "Reading" },
+      { questionId: 5, response: "5" },
     ]);
   });
 
@@ -110,12 +110,68 @@ describe("Form", () => {
 
     fireEvent.submit(screen.getByRole("button", { name: /submit/i }));
 
-    expect(mockCallback).toHaveBeenCalledWith([
-      { questionId: 1, value: "" },
-      { questionId: 2, value: "3" },
-      { questionId: 3, value: "" },
-      { questionId: 4, value: "" },
-      { questionId: 5, value: "5" },
+    expect(mockCallback).toHaveBeenCalledWith(1, [
+      { questionId: 1, response: "" },
+      { questionId: 2, response: "3" },
+      { questionId: 3, response: "" },
+      { questionId: 4, response: "" },
+      { questionId: 5, response: "5" },
+    ]);
+  });
+
+  it("renders a text input for text questions", () => {
+    render(<Form survey={mockSurvey} callback={mockCallback} />);
+    expect(screen.getByLabelText("What is your name?")).toBeInTheDocument();
+  });
+
+  it("renders radio buttons for radio questions", () => {
+    render(<Form survey={mockSurvey} callback={mockCallback} />);
+    expect(screen.getByLabelText("Red")).toBeInTheDocument();
+    expect(screen.getByLabelText("Blue")).toBeInTheDocument();
+  });
+
+  it("renders checkboxes for checkbox questions", () => {
+    render(<Form survey={mockSurvey} callback={mockCallback} />);
+    expect(screen.getByLabelText("Reading")).toBeInTheDocument();
+    expect(screen.getByLabelText("Traveling")).toBeInTheDocument();
+  });
+
+  it("renders a range input for grade questions", () => {
+    render(<Form survey={mockSurvey} callback={mockCallback} />);
+    expect(screen.getByLabelText("Rate our service")).toBeInTheDocument();
+  });
+
+  it("calls the callback with correct answers for text, radio, and checkbox questions", () => {
+    render(<Form survey={mockSurvey} callback={mockCallback} />);
+
+    fireEvent.change(screen.getByLabelText("What is your name?"), {
+      target: { value: "John Doe" },
+    });
+    fireEvent.click(screen.getByLabelText("Red"));
+    fireEvent.click(screen.getByLabelText("Reading"));
+
+    fireEvent.submit(screen.getByRole("button", { name: /submit/i }));
+
+    expect(mockCallback).toHaveBeenCalledWith(1, [
+      { questionId: 1, response: "John Doe" },
+      { questionId: 2, response: "3" },
+      { questionId: 3, response: "Red" },
+      { questionId: 4, response: "Reading" },
+      { questionId: 5, response: "5" },
+    ]);
+  });
+
+  it("calls the callback with empty answers if no input is provided", () => {
+    render(<Form survey={mockSurvey} callback={mockCallback} />);
+
+    fireEvent.submit(screen.getByRole("button", { name: /submit/i }));
+
+    expect(mockCallback).toHaveBeenCalledWith(1, [
+      { questionId: 1, response: "" },
+      { questionId: 2, response: "3" },
+      { questionId: 3, response: "" },
+      { questionId: 4, response: "" },
+      { questionId: 5, response: "5" },
     ]);
   });
 });

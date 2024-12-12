@@ -1,22 +1,17 @@
 "use client";
 
-import { Prisma } from "@prisma/client";
+import { Answer, Prisma } from "@prisma/client";
 
 type FullSurvey = Prisma.SurveyGetPayload<{
   include: { questions: { include: { options: true } } };
 }>;
-
-interface Answer {
-  questionId: number;
-  value: string;
-}
 
 export default function Form({
   survey,
   callback,
 }: {
   survey: FullSurvey;
-  callback: (answers: Answer[]) => void;
+  callback: (surveyId: number, answers: Answer[]) => void;
 }) {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,19 +26,22 @@ export default function Form({
         const value = formData.get(name);
         return {
           questionId: question.id,
-          value: value ? value.toString() : "",
+          response: value ? value.toString() : "",
         };
       } else {
         const values = question.options
           .filter((option) => formData.get(`${name}-option-${option.id}`))
-          .map((option) => option.id.toString());
+          .map((option) => option.text.toString());
         return {
           questionId: question.id,
-          value: values.join(","),
+          response: values.join(","),
         };
       }
     });
-    callback(answers);
+    callback(
+      survey.id,
+      answers.map((answer) => answer as Answer)
+    );
   };
   return (
     <div className="h-[100vh] flex items-center justify-center">
@@ -67,7 +65,7 @@ export default function Form({
                       type="radio"
                       id={`question-${question.id}-option-${option.id}`}
                       name={`question-${question.id}`}
-                      value={option.id}
+                      value={option.text}
                     />
                     <label
                       htmlFor={`question-${question.id}-option-${option.id}`}
