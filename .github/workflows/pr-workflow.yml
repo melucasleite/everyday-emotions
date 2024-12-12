@@ -30,6 +30,7 @@ jobs:
     - name: Build project
       env:
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
       run: npm run build
 
     - name: Upload coverage reports to Codecov

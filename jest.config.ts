@@ -26,7 +26,10 @@ const config: Config = {
           "ts-jest",
           { tsconfig: "<rootDir>/tsconfig.jest.json" },
         ],
-        "^.+\\.(js|mjs|cjs)?$": "babel-jest",
+        "^.+\\.(js|mjs|cjs)?$": [
+          "babel-jest",
+          { configFile: "./babel.config.jest.js" },
+        ],
       },
       transformIgnorePatterns: [],
     },
@@ -39,7 +42,10 @@ const config: Config = {
           "ts-jest",
           { tsconfig: "<rootDir>/tsconfig.jest.json" },
         ],
-        "^.+\\.(js|mjs|cjs|jsx)?$": "babel-jest",
+        "^.+\\.(js|mjs|cjs|jsx)?$": [
+          "babel-jest",
+          { configFile: "./babel.config.jest.js" },
+        ],
       },
       transformIgnorePatterns: [],
     },
