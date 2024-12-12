@@ -8,13 +8,14 @@ type FullSurvey = Prisma.SurveyGetPayload<{
 
 export default function Form({
   survey,
+  userId,
   callback,
 }: {
   survey: FullSurvey;
-  callback: (surveyId: number, answers: Answer[]) => void;
+  userId: number;
+  callback: (surveyId: number, userId: number, answers: Answer[]) => void;
 }) {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const answers = survey.questions.map((question) => {
       const name = `question-${question.id}`;
@@ -40,12 +41,15 @@ export default function Form({
     });
     callback(
       survey.id,
+      userId,
       answers.map((answer) => answer as Answer)
     );
+    event.preventDefault();
   };
   return (
     <div className="h-[100vh] flex items-center justify-center">
-      <form onSubmit={onSubmit} className="text-center">
+      <h1>{survey.name}</h1>
+      <form onSubmit={onSubmit} className="text-center" role="form">
         {survey.questions.map((question) => (
           <div className="mb-5" key={question.id}>
             <div className="mb-5">

@@ -1,8 +1,9 @@
 import { Answer } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function getFirstSurvey() {
-  const found = await prisma.survey.findFirst({
+export async function getSurveyById(surveyId: number) {
+  const found = await prisma.survey.findUnique({
+    where: { id: surveyId },
     include: { questions: { include: { options: true } } },
   });
   if (!found) {
